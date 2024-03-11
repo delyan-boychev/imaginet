@@ -32,14 +32,14 @@ After downloading all the sets with the scripts, you can invoke `delete_not_need
 
 
 ## Sources
-The images generated in our work and DALL·E 3 images are provided [here](https://drive.google.com/drive/folders/1OGVxMuKKaRFwEJjhE_sX2ysB7nmn74M2?usp=drive_link).
+The images generated in our work and DALL·E 3 images are provided [here](https://drive.google.com/file/d/1uUAoVUcAlUX9ltOXBlf3pKDz3rCKoytk/view?usp=sharing).
 The following sets are not provided in our archive. They should be downloaded from their original sources:
  - **ImageNet:** [Training/Test set](https://www.kaggle.com/c/imagenet-object-localization-challenge)
  - **COCO:** [Training set](http://images.cocodataset.org/zips/train2017.zip), [Validation set](http://images.cocodataset.org/zips/val2017.zip)
- - **LSUN/ProGAN**: [Training set](https://drive.google.com/file/d/1iVNBV0glknyTYGA9bCxT_d0CVTOgGcKh/view?usp=sharing), [Test set](https://drive.google.com/file/d/1z_fD3UKgWQyOTZIBbYSaQ-hz4AzUrLC1/view?usp=sharing)
+ - **LSUN/ProGAN:** [Training set](https://drive.google.com/file/d/1iVNBV0glknyTYGA9bCxT_d0CVTOgGcKh/view?usp=sharing), [Test set](https://drive.google.com/file/d/1z_fD3UKgWQyOTZIBbYSaQ-hz4AzUrLC1/view?usp=sharing)
 - **FFHQ:** [Aligned images 1024x1024](https://drive.google.com/open?id=1tZUcXDBeOibC6jcMCtgRRz67pzrAHeHL)
-- **WikiArt**: [Whole dataset](https://drive.google.com/file/d/1vTChp3nU5GQeLkPwotrybpUGUXj12BTK/view?usp=drivesdk)
-- **Danbooru:**: [Original images](https://gwern.net/danbooru2021)
+- **WikiArt:** [Whole dataset](https://drive.google.com/file/d/1vTChp3nU5GQeLkPwotrybpUGUXj12BTK/view?usp=drivesdk)
+- **Danbooru:** [Original images](https://gwern.net/danbooru2021)
 - **Photozilla:**  [Original images](https://drive.google.com/file/d/1WkY6rcXMnir8nk4obejVq64h_WrtydVg/view?usp=drive_link)
 - **JourneyDB:** [File 000.tgz](https://huggingface.co/datasets/JourneyDB/JourneyDB/blob/main/data/train/imgs/000.tgz)
 ## Licensing
