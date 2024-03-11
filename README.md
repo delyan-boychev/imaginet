@@ -18,7 +18,7 @@ The extracted content should be put in the following folders (<sup>*</sup> signi
  - **Danbooru:** danbooru2021
  - **JourneyDB:** journeydb (extracted 000.zip folder renamed to journeydb)
 
-| :warning:  Currently, Danbooru host is down. Due to this, we provided a backup of the images [here]().  |
+| :warning:  Currently, Danbooru host is down. Due to this, we provided a backup of the images [here](https://drive.google.com/file/d/1p0EM6IUAdBhFfdGoLpo0ewhLPXEkA86a/view?usp=sharing).  |
 |-------------------------------------------------------------------------------------------------------------|
 
 
