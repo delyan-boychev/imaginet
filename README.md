@@ -5,8 +5,8 @@
 
 ## Instructions for downloading
 For now we have provided only automatic download script for **FFHQ** datasetsince we used custom filenames. Before download, you should write the path to your credentials for Google Drive API in `ffhq.py` script and install the packages from `requirements.txt`. Other datasets should be downloaded the datasets from their original sources and place them in one directory. This is the root directory of the dataset. After that, you can invoke `delete_not_needed.py` with an argument to the path of the root directory where all datasets are extracted. The script will remove the images that are not included in our dataset.
-> [!NOTE]
-> You should place all extracted datasets in one folder.
+| :information_source: You should place all extracted datasets in one folder. |
+|-----------------------------------------------------------------------------|
 
 The extracted content should be put in the following folders (<sup>*</sup> signifies datasets that do not require additional folder to be created):
  - **ImageNet:** imagenet (ILSVRC folder placed here)
@@ -18,8 +18,8 @@ The extracted content should be put in the following folders (<sup>*</sup> signi
  - **Danbooru:** danbooru2021
  - **JourneyDB:** journeydb (extracted 000.zip folder renamed to journeydb)
 
-> [!WARNING]
-> Currently, Danbooru host is down. Due to this, we provided a back up of the images [here]().
+| :warning:  Currently, Danbooru host is down. Due to this, we provided a back up of the images [here]().  |
+|-------------------------------------------------------------------------------------------------------------|
 
 
 <!-- To download all the sets automatically, you will need to download the pip packages in `requirements.txt`. After that all the scripts should be invoked in the same directory. 
