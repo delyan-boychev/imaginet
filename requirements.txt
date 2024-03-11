@@ -1,0 +1,4 @@
+kaggle==1.6.6
+google-api-python-client==2.121.0
+numpy==1.26.4
+pillow==10.2.0
