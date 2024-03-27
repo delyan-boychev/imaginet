@@ -4,13 +4,7 @@ from PIL import Image, ImageFile
 from torch.utils.data import Dataset
 import albumentations as A
 import numpy as np
-import time
-import chardet
 import random
-import imagesize
-import codecs
-import pickle
-from pymage_size import get_image_size
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 Image.MAX_IMAGE_PIXELS = 933120000
