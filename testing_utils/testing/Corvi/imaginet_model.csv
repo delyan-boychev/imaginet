@@ -1,0 +1,14 @@
+Model,ACC,AUC
+progan,0.8711,0.9981
+stylegan2,0.8436,0.9312
+stylegan3,0.8536,0.9425
+biggan,0.8516,0.9567
+eg3d,0.8081,0.8857
+taming_trans,0.7553,0.8310
+dalle_mini,0.7841,0.8642
+dalle2,0.7026,0.7696
+glide,0.7901,0.8656
+latent_diff,0.8576,0.9615
+stable_diff,0.8711,0.9964
+adm,0.7104,0.7743
+Mean,0.8083,0.8981

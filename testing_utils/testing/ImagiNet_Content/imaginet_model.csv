@@ -1,0 +1,6 @@
+Content Type,ACC,AUC
+Photos,0.9362,0.9837
+Paintings,0.7757,0.8402
+Faces,0.8448,0.9351
+Uncategorised,0.9244,0.9678
+Mean,0.8703,0.9317
