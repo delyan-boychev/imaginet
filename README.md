@@ -39,6 +39,9 @@ Before testing you should run `testing_utils/testing/setup_testing.py` to downlo
 
 We also provide our training scripts in `training_utils`. You can train the model with either SelfCon or Cross-Entropy Loss. The calibration scripts are placed in the same directory.
 
+## Model Checkpoints
+Model checkpoints are accessible [here](https://drive.google.com/drive/folders/1En2BI9H9LxqA5XIpNaMXhqhF8--XAKns?usp=sharing).
+
 
 ## Sources
 The images generated in our work and DALL·E 3 images are provided [here](https://drive.google.com/file/d/1uUAoVUcAlUX9ltOXBlf3pKDz3rCKoytk/view?usp=sharing).
