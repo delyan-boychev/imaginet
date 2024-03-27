@@ -1,11 +1,16 @@
+import os
+import sys
+repo_path = os.path.abspath("../training_utils") 
+sys.path.insert(0, repo_path)
+
 import torch
 import torch.nn as nn
 from torchvision import transforms
-from ..training_utils.datasets import ImagiNet
+from datasets import ImagiNet
 import matplotlib.pyplot as plt
 import albumentations as A
 import numpy as np
-from ..training_utils.networks.resnet_big import ConResNet
+from networks.resnet_big import ConResNet
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from sklearn.metrics import balanced_accuracy_score
@@ -26,7 +31,7 @@ device = torch.device("cuda")
 
 
 model = ConResNet(selfcon_pos=[False, True, False], selfcon_size="fc", dataset="imaginet")
-state = torch.load("./testing/required_libs/imaginet_weights.pt", map_location="cpu")
+state = torch.load("ckpt_model_detection.pth", map_location="cpu")
 model.load_state_dict(state["model"])
 model = model.to("cuda")
 model = model.eval()

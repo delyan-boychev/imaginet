@@ -31,7 +31,7 @@ transform =  transforms.Compose([transforms.ToTensor(), norm])
 device = torch.device("cuda")
 
 model = ConResNet(selfcon_pos=[False, True, False], selfcon_size="fc", dataset="imaginet")
-state = torch.load("./testing/required_libs/imaginet_weights.pt", map_location="cpu")
+state = torch.load("ckpt_model_detection.pth", map_location="cpu")
 model.load_state_dict(state["model"])
 model = model.to("cuda")
 model = model.eval()
