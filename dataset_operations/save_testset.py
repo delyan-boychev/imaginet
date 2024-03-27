@@ -1,9 +1,14 @@
-from ..training_utils.datasets import ImagiNet
+import os
+import sys
+repo_path = os.path.abspath("../../training_utils") 
+sys.path.insert(0, repo_path)
+
+
+from datasets import ImagiNet
 from PIL import Image
 import torch
 from torch.utils.data import DataLoader
 from torchvision import transforms
-import os
 from tqdm import tqdm
 import random
 import numpy as np

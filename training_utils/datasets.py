@@ -26,7 +26,7 @@ class ImagiNet(Dataset):
         ann = [{'image': line.strip().split(",")[0], 'label': line.strip().split(",")[1:]} for line in lines]
         if track == tracks[0]:
             self.annotations = [{'image': a["image"], 'label': a["label"][0]} for a in ann]
-        elif track == tracks[2]:
+        elif track == tracks[1]:
             self.annotations = [{'image': a["image"], 'label': a["label"][1]} for a in ann if int(a["label"][0]) == 1]
         elif track == tracks[2]:
             self.annotations = [{'image': a["image"], 'label': a["label"][2]} for a in ann if int(a["label"][0]) == 1]

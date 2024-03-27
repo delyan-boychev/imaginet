@@ -1,8 +1,13 @@
+import os
+import sys
+repo_path = os.path.abspath("../training_utils") 
+sys.path.insert(0, repo_path)
+
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
-from ..training_utils.networks.resnet_big import ConResNet, LinResNet
-from ..training_utils.datasets import ImagiNet
+from networks.resnet_big import ConResNet, LinResNet
+from datasets import ImagiNet
 from torchvision import transforms
 import torch
 import seaborn as sns
@@ -10,7 +15,7 @@ from tqdm import tqdm
 import pandas as pd
 import torch.multiprocessing
 import random
-from ..training_utils.utils.dim_red_rae import dim_red
+from utils.dim_red_rae import dim_red
 torch.multiprocessing.set_sharing_strategy('file_system')
 
 np.random.seed(42)
