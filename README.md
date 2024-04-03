@@ -46,6 +46,11 @@ Model checkpoints are accessible [here](https://drive.google.com/drive/folders/1
 In the following tables ACC is the balanced acccuracy and AUC is the Area Under the Receiver Operating Characteristics. Best ACC is signified with **bold** and best AUC with <ins>underline</ins>.
 
 ### Synthetic Image Detection
+<style>
+th {
+    text-align: center;
+}
+</style>
 
 #### Results group of models 
 | ACC / AUC  | Grag2021        | Corvi2022       | Wu2023          | Ours                           |
