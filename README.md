@@ -82,7 +82,8 @@ In the following tables ACC is the balanced acccuracy and AUC is the Area Under 
 #### Results of our Synthetic Generator Identificator (in terms of ACC)
 |  GAN  | SD |    Midjourney    |      DALL·E 3     |      Mean     |
 |:----:|:----:|:----:|:----:|:----:|
-| 0.9998 | 0.9978 | 0.9964 | 0.9872 | 0.9953 | 
+| 0.9998 | 0.9978 | 0.9964 | 0.9872 | 0.9953 |
+ 
 AUC = 0.9999
 
 
