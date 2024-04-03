@@ -51,6 +51,6 @@ output_folder = "./" # REPLACE WITH FOLDER WHERE YOU WANT TO SAVE YOUR TESTSET
 os.mkdir(os.path.join(output_folder, "testset"))
 k_t = 0
 for i, a in enumerate(files):
-    dataset = ImagiNet("/home/delyan/BIG_DATASET_DONT_DELETE/", f"{a}", train=False, test_aug=True, transform=transforms.ToTensor())
+    dataset = ImagiNet("./", f"{a}", train=False, test_aug=True, transform=transforms.ToTensor())
     dataloader = DataLoader(dataset, batch_size=20, num_workers=8, shuffle=False) # DO NOT CHANGE THE BATCH SIZE AND THE WORKERS (IT WON'T BE REPRODUCIBLE)
     k_t = save_images_from_dataloader(dataloader, output_folder, i, k_t)

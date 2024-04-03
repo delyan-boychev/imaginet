@@ -32,12 +32,12 @@ device = torch.device("cuda")
 dataset = ImagiNet_Testset("./",f"../../../annotations/test_calibration.txt", transform=transform)
 dataloader = DataLoader(dataset, batch_size=20, num_workers=8, shuffle=True)
 
-_, model_path, arch, norm_type, patch_size = get_method_here('Grag2021_latent', weights_path="/home/delyan/weights_synth/weights")
+_, model_path, arch, norm_type, patch_size = get_method_here('Grag2021_latent', weights_path="./required_libs/weights")
 device = 'cuda:0'
 model = def_model(arch, model_path, localize=False)
 model = model.to(device).eval()
 
-_, model_path, arch, norm_type, patch_size = get_method_here('Grag2021_progan', weights_path="/home/delyan/weights_synth/weights")
+_, model_path, arch, norm_type, patch_size = get_method_here('Grag2021_progan', weights_path="./required_libs/weights")
 device = 'cuda:0'
 model2 = def_model(arch, model_path, localize=False)
 model2 = model2.to(device).eval()

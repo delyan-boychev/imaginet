@@ -13,3 +13,4 @@ scipy==1.11.3
 torchmetrics==0.10.3
 torcheval==0.0.7
 tensorboard==2.15.1
+gdown==5.1.0
