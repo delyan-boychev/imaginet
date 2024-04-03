@@ -86,6 +86,15 @@ In the following tables ACC is the balanced acccuracy and AUC is the Area Under 
  
 AUC = 0.9999
 
+### Inference Time
+Inference testing is conducuted in identical conditions - 448x448 input image. All tests are conducted on a single 4090 GPU. The best inference time is signified with **bold**.
+|  Detector | Inference Time (ms) ↓ |
+|:---------:|:-------------------:|
+| Grag2021  |        24.23        |
+| Corvi2022 |        48.75        |
+| Wu2023    |        15.92        |
+| Ours      |       **1.84**      |
+
 
 ## Sources
 The images generated in our work and DALL·E 3 images are provided [here](https://drive.google.com/file/d/1uUAoVUcAlUX9ltOXBlf3pKDz3rCKoytk/view?usp=sharing).
