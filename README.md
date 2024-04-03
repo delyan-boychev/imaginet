@@ -49,7 +49,7 @@ In the following tables ACC is the balanced acccuracy and AUC is the Area Under 
 
 #### Results group of models 
 |  ACC / AUC |     Grag2021    |    Corvi2022    |      Wu2023     |       Ours      |
-|:----------:|:---------------:|:---------------:|:---------------:|:---------------:|
+|:----------|:---------------:|:---------------:|:---------------:|:---------------:|
 | GAN        | 0.6889 / 0.8403 | 0.6822 / 0.8033 | 0.6508 / 0.6971 | **0.8242** / <ins>0.8871</ins> |
 | SD         | 0.5140 / 0.5217 | 0.6112 / 0.6851 | 0.6367 / 0.6718 | **0.9145** / <ins>0.9724</ins> |
 | Midjourney | 0.4958 / 0.5022 | 0.5826 / 0.6092 | 0.5326 / 0.5289 | **0.8844** / <ins>0.9448</ins> |
@@ -58,7 +58,7 @@ In the following tables ACC is the balanced acccuracy and AUC is the Area Under 
 
 #### Results specific models 
 |    ACC / AUC   |     Grag2021    |    Corvi2022    |      Wu2023     |       Ours      |
-|:--------------:|:---------------:|:---------------:|:---------------:|:---------------:|
+|:--------------|:---------------:|:---------------:|:---------------:|:---------------:|
 | ProGAN         | 0.7270 / 0.9319 | 0.7263 / 0.9262 | 0.8147 / 0.9520 | **0.9540** / <ins>0.9993</ins> |
 | StyleGAN-XL    | 0.6747 / 0.8048 | 0.6456 / 0.7584 | 0.5851 / 0.6076 | **0.8905** / <ins>0.9563</ins> |
 | StyleGAN3      | 0.6924 / <ins>0.8412</ins> | **0.7031** / 0.7795 | 0.6682 / 0.6877 | 0.6329 / 0.6973 |
@@ -72,7 +72,7 @@ In the following tables ACC is the balanced acccuracy and AUC is the Area Under 
 
 #### Results content types
 |   ACC / AUC   |     Grag2021    |    Corvi2022    |      Wu2023     |       Ours      |
-|:-------------:|:---------------:|:---------------:|:---------------:|:---------------:|
+|:-------------|:---------------:|:---------------:|:---------------:|:---------------:|
 | Photos        | 0.6676 / 0.7593 | 0.7203 / 0.8247 | 0.6933 / 0.7533 | **0.8242** / <ins>0.8871</ins> |
 | Paintings     | 0.5637 / 0.6158 | 0.6074 / 0.6853 | 0.5030 / 0.4614 | **0.9145** / <ins>0.8402</ins> |
 | Faces         | 0.5781 / 0.6675 | 0.5316 / 0.6913 | 0.6630 / 0.7257 | **0.8844** / <ins>0.9448</ins> |
@@ -88,12 +88,12 @@ AUC = 0.9999
 
 ### Inference Time
 Inference testing is conducuted in identical conditions - 448x448 input image. All tests are conducted on a single 4090 GPU. The best inference time is signified with **bold**.
-|  Detector | Inference Time (ms) ↓ |
-|:---------:|:-------------------:|
-| Grag2021  |        24.23        |
-| Corvi2022 |        48.75        |
-| Wu2023    |        15.92        |
-| Ours      |       **1.84**      |
+| Detector  | Inference Time (ms) ↓ |
+|:--------- |:---------------------:|
+| Grag2021  | 24.23                 |
+| Corvi2022 | 48.75                 |
+| Wu2023    | 15.92                 |
+| Ours      | **1.84**              |
 
 
 ## Sources
