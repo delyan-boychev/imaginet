@@ -43,7 +43,7 @@ We also provide our training scripts in `training_utils`. You can train the mode
 Model checkpoints are accessible [here](https://drive.google.com/drive/folders/1En2BI9H9LxqA5XIpNaMXhqhF8--XAKns?usp=sharing).
 
 ## Results
-In the following tables ACC is the balanced acccuracy and AUC is the Area Under the Receiver Operating Characteristics. Best ACC is signified with **bold** and best AUC with <ins>underline</ins>.
+In the following tables, ACC is the balanced accuracy and AUC is the Area Under the Receiver Operating Characteristics. Best ACC is signified with **bold** and best AUC with <ins>underline</ins>.
 
 ### Synthetic Image Detection
 <style>
@@ -85,7 +85,7 @@ th {
 | **Mean**      | 0.5598 / 0.6134 | 0.6151 / 0.7111 | 0.6110 / 0.6374 | **0.8838** / <ins>0.9438</ins> |
 
 ### Model Identification
-#### Results of our Synthetic Generator Identificator (in terms of ACC)
+#### Results of our Synthetic Generator Identification (in terms of ACC)
 | GAN    | SD     | Midjourney | DALL·E 3 | Mean   |
 |:------:|:------:|:----------:|:--------:|:------:|
 | 0.9998 | 0.9978 | 0.9964     | 0.9872   | 0.9953 |
@@ -93,7 +93,7 @@ th {
 AUC = 0.9999
 
 ### Inference Time
-Inference testing is conducuted in identical conditions - 448x448 input image. All tests are conducted on a single 4090 GPU. The best inference time is signified with **bold**.
+Inference testing is conducted in identical conditions - 448x448 input image. All tests are conducted on a single 4090 GPU. The best inference time is signified with **bold**.
 | Detector  | Inference Time (ms) ↓ |
 |:--------- |:---------------------:|
 | Grag2021  | 24.23                 |
