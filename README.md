@@ -1,7 +1,7 @@
-# ImagiNet: A Balanced High-Resolution Dataset for Benchmarking of Synthetic Image Detectors
+# ImagiNet: A Multi-Content Dataset for Generalizable Synthetic Image Detection via Contrastive Learning
 ![](media/dataset_preview.png)
 **Abstract:**
-<p align="justify">Generative models, such as Diffusion Models (DMs), Variational    Auto-Encoders (VAEs), and Generative Adversarial Networks (GANs),    produce images with a level of authenticity that makes them nearly    indistinguishable from real photos and artwork. While this capability    is beneficial for many industries, the difficulty of identifying    synthetic images leaves online media platforms vulnerable to    impersonation and misinformation attempts. To support the development    of defensive methods, we introduce ImagiNet, a high-resolution and    balanced dataset for synthetic image detection. It contains 200K    examples, spanning four content categories: photos, paintings, faces,    and uncategorized. Synthetic images are produced with open-source and    proprietary generators, whereas real counterparts of the same content    type are collected from public datasets. The structure of ImagiNet    allows for a two-track evaluation system: i) classification as real    or synthetic and ii) identification of the generative model. To    establish a baseline, we train a ResNet-50 model using a    self-supervised contrastive (SelfCon) objective for each track. The    model demonstrates strong performance across previously available    benchmarks, achieving an AUC of up to 0.97 and balanced accuracy    ranging between 80% and 93%, even under social network conditions    involving compression and resizing. </p>
+<p align="justify">Generative models, such as diffusion models (DMs), variational autoencoders (VAEs), and generative adversarial networks (GANs), produce images with a level of authenticity that makes them nearly indistinguishable from real photos and artwork. While this capability is beneficial for many industries, the difficulty of identifying synthetic images leaves online media platforms vulnerable to impersonation and misinformation attempts. To support the development of defensive methods, we introduce ImagiNet, a high-resolution and balanced dataset for synthetic image detection, designed to mitigate potential biases in existing resources. It contains 200K examples, spanning four content categories: photos, paintings, faces, and uncategorized. Synthetic images are produced with open-source and proprietary generators, whereas real counterparts of the same content type are collected from public datasets. The structure of ImagiNet allows for a two-track evaluation system: i) classification as real or synthetic and ii) identification of the generative model. To establish a baseline, we train a ResNet-50 model using a self-supervised contrastive objective (SelfCon) for each track. The model demonstrates state-of-the-art performance and high inference speed across established benchmarks, achieving an AUC of up to 0.99 and balanced precision ranging from 86\% to 95\%, even under social network conditions that involve compression and resizing.</p>
 
 ## Instructions for downloading
 For now we have provided only an automatic download script for **FFHQ** datasets since we used custom filenames. Before downloading, you should write the path to your credentials for Google Drive API in `download_scripts/ffhq.py` script and install the packages from `requirements.txt`. Other datasets should be downloaded the datasets from their original sources and placed in one directory. This is the root directory of the dataset. After that, you can invoke `dataset_operations/delete_not_needed.py` with an argument to the path of the root directory where all datasets are extracted. The script will remove the images that are not included in our dataset.
@@ -41,65 +41,6 @@ We also provide our training scripts in `training_utils`. You can train the mode
 
 ## Model Checkpoints
 Model checkpoints are accessible [here](https://drive.google.com/drive/folders/1En2BI9H9LxqA5XIpNaMXhqhF8--XAKns?usp=sharing).
-
-## Results
-In the following tables ACC is the balanced acccuracy and AUC is the Area Under the Receiver Operating Characteristics. Best ACC is signified with **bold** and best AUC with <ins>underline</ins>.
-
-### Synthetic Image Detection
-<style>
-th {
-    text-align: center;
-}
-</style>
-
-#### Results group of models 
-| ACC / AUC  | Grag2021        | Corvi2022       | Wu2023          | Ours                           |
-|:---------- |:---------------:|:---------------:|:---------------:|:------------------------------:|
-| GAN        | 0.6889 / 0.8403 | 0.6822 / 0.8033 | 0.6508 / 0.6971 | **0.8242** / <ins>0.8871</ins> |
-| SD         | 0.5140 / 0.5217 | 0.6112 / 0.6851 | 0.6367 / 0.6718 | **0.9145** / <ins>0.9724</ins> |
-| Midjourney | 0.4958 / 0.5022 | 0.5826 / 0.6092 | 0.5326 / 0.5289 | **0.8844** / <ins>0.9448</ins> |
-| DALL·E 3   | 0.4128 / 0.3905 | 0.5180 / 0.5270 | 0.5368 / 0.5482 | **0.9120** / <ins>0.9709</ins> |
-| **Mean**   | 0.5279 / 0.5637 | 0.5985 / 0.6562 | 0.5892 / 0.6116 | **0.8838** / <ins>0.9438</ins> |
-
-#### Results specific models 
-| ACC / AUC    | Grag2021                   | Corvi2022           | Wu2023          | Ours                            |
-|:------------ |:--------------------------:|:-------------------:|:---------------:|:-------------------------------:|
-| ProGAN       | 0.7270 / 0.9319            | 0.7263 / 0.9262     | 0.8147 / 0.9520 | **0.9540** / <ins>0.9993</ins>  |
-| StyleGAN-XL  | 0.6747 / 0.8048            | 0.6456 / 0.7584     | 0.5851 / 0.6076 | **0.8905** / <ins>0.9563</ins>  |
-| StyleGAN3    | 0.6924 / <ins>0.8412</ins> | **0.7031** / 0.7795 | 0.6682 / 0.6877 | 0.6329 / 0.6973                 |
-| SD v2.1      | 0.5375 / 0.5579            | 0.6196 / 0.6908     | 0.6261 / 0.6555 | **0.9001** / <ins>0.96203</ins> |
-| SDXL v1.0    | 0.5653 / 0.6008            | 0.6333 / 0.7295     | 0.6160 / 0.6449 | **0.9418** / <ins>0.99133</ins> |
-| Animagine XL | 0.2862 / 0.1711            | 0.5231 / 0.5346     | 0.7289 / 0.7836 | **0.8831** / <ins>0.95403</ins> |
-| Midjourney   | 0.4886 / 0.4946            | 0.5690 / 0.6021     | 0.5346 / 0.5296 | **0.8818** / <ins>0.94363</ins> |
-| DALL·E 3     | 0.4094 / 0.3798            | 0.5152 / 0.5253     | 0.5448 / 0.5642 | **0.9094** / <ins>0.96983</ins> |
-| **Mean**     | 0.5476 / 0.5978            | 0.6169 / 0.6933     | 0.6398 / 0.6781 | **0.8742** / <ins>0.93423</ins> |
-
-
-#### Results content types
-| ACC / AUC     | Grag2021        | Corvi2022       | Wu2023          | Ours                           |
-|:------------- |:---------------:|:---------------:|:---------------:|:------------------------------:|
-| Photos        | 0.6676 / 0.7593 | 0.7203 / 0.8247 | 0.6933 / 0.7533 | **0.8242** / <ins>0.8871</ins> |
-| Paintings     | 0.5637 / 0.6158 | 0.6074 / 0.6853 | 0.5030 / 0.4614 | **0.9145** / <ins>0.8402</ins> |
-| Faces         | 0.5781 / 0.6675 | 0.5316 / 0.6913 | 0.6630 / 0.7257 | **0.8844** / <ins>0.9448</ins> |
-| Uncategorised | 0.4299 / 0.4110 | 0.6010 / 0.6431 | 0.5847 / 0.6091 | **0.9120** / <ins>0.9709</ins> |
-| **Mean**      | 0.5598 / 0.6134 | 0.6151 / 0.7111 | 0.6110 / 0.6374 | **0.8838** / <ins>0.9438</ins> |
-
-### Model Identification
-#### Results of our Synthetic Generator Identificator (in terms of ACC)
-| GAN    | SD     | Midjourney | DALL·E 3 | Mean   |
-|:------:|:------:|:----------:|:--------:|:------:|
-| 0.9998 | 0.9978 | 0.9964     | 0.9872   | 0.9953 |
- 
-AUC = 0.9999
-
-### Inference Time
-Inference testing is conducuted in identical conditions - 448x448 input image. All tests are conducted on a single 4090 GPU. The best inference time is signified with **bold**.
-| Detector  | Inference Time (ms) ↓ |
-|:--------- |:---------------------:|
-| Grag2021  | 24.23                 |
-| Corvi2022 | 48.75                 |
-| Wu2023    | 15.92                 |
-| Ours      | **1.84**              |
 
 
 ## Sources
