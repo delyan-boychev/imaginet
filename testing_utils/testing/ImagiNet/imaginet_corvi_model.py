@@ -32,15 +32,10 @@ device = torch.device("cuda")
 dataset = ImagiNet_Testset("./",f"../../../annotations/test_calibration.txt", transform=transform)
 dataloader = DataLoader(dataset, batch_size=20, num_workers=8, shuffle=True)
 
-_, model_path, arch, norm_type, patch_size = get_method_here('Grag2021_latent', weights_path="./required_libs/weights")
-device = 'cuda:0'
+_, model_path, arch, norm_type, patch_size = get_method_here('resnet50nodown_imaginet', weights_path="../required_libs/")
+device = 'cuda'
 model = def_model(arch, model_path, localize=False)
 model = model.to(device).eval()
-
-_, model_path, arch, norm_type, patch_size = get_method_here('Grag2021_progan', weights_path="./required_libs/weights")
-device = 'cuda:0'
-model2 = def_model(arch, model_path, localize=False)
-model2 = model2.to(device).eval()
 
 
 l = []
@@ -50,8 +45,7 @@ k = 0
 with torch.no_grad():
     for image, label in tqdm(dataloader):
         out =  model(image.cuda())
-        out2 =  model2(image.cuda())
-        out = torch.mean((out + out2)/2.0, (1, 2, 3)).unsqueeze(1)
+        out = torch.mean(out, (2, 3))
         l.append(out)
         l1.append(label.cuda())
 l = torch.concatenate(l, dim=0)
@@ -59,7 +53,7 @@ l1 = torch.concatenate(l1, dim=0)
 
 calib = LogisticRegression(max_iter=1000, C=1e10, solver="saga")
 calib.fit(l.cpu().numpy(), l1.cpu().numpy()[:,0])
-f = open("./corvi_model.csv", "w")
+f = open("./imaginet_corvi_model.csv", "w")
 csvwriter =  csv.writer(f)
 csvwriter.writerow(["Model", "ACC", "AUC"])
 
@@ -79,8 +73,7 @@ for i, a in enumerate(files):
     with torch.no_grad():
         for image, label in tqdm(dataloader):
             out =  model(image.cuda())
-            out2 =  model2(image.cuda())
-            out = torch.mean((out + out2)/2.0, (1, 2, 3)).unsqueeze(1)
+            out = torch.mean(out, (2, 3))
             l.append(out)
             l1.append(label.cuda())
     l = torch.concatenate(l, dim=0).cpu().numpy()

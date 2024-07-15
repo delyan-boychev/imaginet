@@ -1,0 +1,8 @@
+Model,ACC,AUC
+DreamBooth,0.9572,0.9928
+MidjoruneyV4,0.9542,0.9930
+MidjourneyV5,0.9655,0.9975
+NightCafe,0.8654,0.9324
+StableAI,0.9527,0.9885
+YiJian,0.8266,0.9174
+Mean,0.9203,0.9703

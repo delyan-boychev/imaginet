@@ -51,7 +51,7 @@ print(l.shape)
 
 calib = LogisticRegression(max_iter=1000, C=1e10, solver="saga")
 calib.fit(l.cpu().numpy(), l1.cpu().numpy()[:,0])
-f = open("./grag2021_model2.csv", "w")
+f = open("./grag2021_model.csv", "w")
 csvwriter =  csv.writer(f)
 csvwriter.writerow(["Model", "ACC", "AUC"])
 
@@ -66,7 +66,7 @@ for i, a in enumerate(files):
     print(a)
     l = []
     l1 = []
-    dataset = ImagiNet_Testset("./", f"../../annotations/{a}", transform=transform)
+    dataset = ImagiNet_Testset("./", f"../../../annotations/{a}", transform=transform)
     dataloader = DataLoader(dataset, batch_size=20, num_workers=8, shuffle=True)
     with torch.no_grad():
         for image, label in tqdm(dataloader):

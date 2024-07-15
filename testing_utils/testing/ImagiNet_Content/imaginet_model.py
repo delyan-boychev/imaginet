@@ -37,20 +37,12 @@ dataset2 = ImagiNet_Testset("./", f"../../../annotations/test_all.txt", transfor
 dataloader2 = DataLoader(dataset2, batch_size=20, num_workers=8, shuffle=True)
 
 
-model = ConResNet(selfcon_pos=[False, True, False], selfcon_size="fc", dataset="imaginet")
+model = ConResNet(name="resnet50nodown", selfcon_pos=[False, True, False], selfcon_size="fc", dataset="imaginet")
 state = torch.load("../required_libs/imaginet_weights.pt", map_location="cpu")
 model.load_state_dict(state["model"])
 model = model.to("cuda")
 model = model.eval()
-class L2Norm(nn.Module):
-    def forward(self, x):
-        return torch.nn.functional.normalize(x, dim=1, p=2)
-classifier = nn.Sequential(
-                L2Norm(),
-                nn.Linear(2048, 1024),
-                nn.ReLU(inplace=True),
-                nn.Linear(1024, 1)
-            )
+classifier = nn.Sequential(nn.BatchNorm1d(2048), nn.Linear(2048, 1024), nn.ReLU(), nn.Dropout(0.2), nn.Linear(1024, 1))
 classifier.load_state_dict(state["classifier"])
 classifier = classifier.to("cuda")
 classifier.eval()

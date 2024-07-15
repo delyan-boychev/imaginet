@@ -84,7 +84,7 @@ for i, a in enumerate(files):
     print(a)
     l = []
     l1 = []
-    dataset = LASTED_Load("./", f"../../annotations/{a}", max_split=4, transform=transform)
+    dataset = LASTED_Load("./", f"../../../annotations/{a}", max_split=4, transform=transform)
     dataloader = DataLoader(dataset, batch_size=20, num_workers=8, shuffle=True)
     l, l1 = validation_similarity(model, dataloader)
     print(l1.shape)

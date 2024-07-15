@@ -37,7 +37,7 @@ if __name__ == "__main__":
         model = LinResNet("resnet50", args.num_classes)
         model.load_state_dict(torch.load(args.model_path, map_location="cpu")["model"])
     elif args.model_type == "selfcon":
-        model = ConResNet(selfcon_arch="resnet", selfcon_size="fc", selfcon_pos=[False, True, False], dataset="imaginet")
+        model = ConResNet(selfcon_arch="resnet50nodown", selfcon_size="fc", selfcon_pos=[False, True, False], dataset="imaginet")
         model.load_state_dict(torch.load(args.model_path, map_location="cpu")["model"])
     model = model.to("cuda")
     model.eval()

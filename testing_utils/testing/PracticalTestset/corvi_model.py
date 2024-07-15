@@ -1,7 +1,7 @@
 import os
 import sys
 
-repo_path = os.path.abspath("../required_libs/DMimageDetection")
+repo_path = os.path.abspath("../required_libs/DMimageDetection/test_code")
 sys.path.insert(0, repo_path)
 
 import torch

@@ -79,6 +79,141 @@ class LinResNet(nn.Module):
         self.fc = nn.Sequential(nn.Linear(model_dict[model][1], 1024), nn.ReLU(inplace=True), nn.Linear(1024, num_classes))
     def forward(self, x):
         return self.fc(self.encoder(x)[1])
+    
+
+class ResNetNoDown(nn.Module):
+    def __init__(self, block, num_blocks, in_channel=3, zero_init_residual=False, selfcon_pos=[False,False,False], selfcon_arch='resnet', selfcon_size='same', dataset=''):
+        super(ResNetNoDown, self).__init__()
+        self.in_planes = 64
+        self.block = block
+        self.num_blocks = num_blocks
+        self.in_channel = in_channel
+        self.dataset = dataset
+
+        self.large = False if dataset in ['cifar10', 'cifar100', 'tinyimagenet'] else True
+        self.conv1 = nn.Conv2d(in_channel, 64, kernel_size=7, stride=1, padding=3, bias=False)
+            
+        self.bn1 = nn.BatchNorm2d(64)
+        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=1, padding=1)
+        self.dropout = nn.Identity()
+        #if dataset == "imaginet":
+        #   self.conv1 = nn.Conv2d(in_channel, 64, kernel_size=7, stride=1, padding=3, bias=False)
+        #   self.maxpool = nn.MaxPool2d(kernel_size=3, stride=1, padding=1)
+        self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)
+        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
+        self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
+        self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+
+        self.selfcon_pos = selfcon_pos
+        self.selfcon_arch = selfcon_arch
+        self.selfcon_size = selfcon_size
+        self.selfcon_layer = nn.ModuleList([self._make_sub_layer(idx, pos) for idx, pos in enumerate(selfcon_pos)])
+            
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+            elif isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+
+        # Zero-initialize the last BN in each residual branch,
+        # so that the residual branch starts with zeros, and each residual block behaves
+        # like an identity. This improves the model by 0.2~0.3% according to:
+        # https://arxiv.org/abs/1706.02677
+        if zero_init_residual:
+            for m in self.modules():
+                if isinstance(m, Bottleneck):
+                    nn.init.constant_(m.bn3.weight, 0)
+                elif isinstance(m, BasicBlock):
+                    nn.init.constant_(m.bn2.weight, 0)
+
+    def _make_layer(self, block, planes, num_blocks, stride):
+        strides = [stride] + [1] * (num_blocks - 1)
+        layers = []
+        for i in range(num_blocks):
+            stride = strides[i]
+            layers.append(block(self.in_planes, planes, stride))
+            self.in_planes = planes * block.expansion
+        return nn.Sequential(*layers)
+
+    def _make_sub_layer(self, idx, pos):
+        channels = [64, 128, 256, 512]
+        strides = [1, 2, 2, 2]
+        if self.selfcon_size == 'same':
+            num_blocks = self.num_blocks
+        elif self.selfcon_size == 'small':
+            num_blocks = [int(n/2) for n in self.num_blocks]
+        elif self.selfcon_size == 'large':
+            num_blocks = [int(n*2) for n in self.num_blocks]
+        elif self.selfcon_size == 'fc':
+            pass
+        else:
+            raise NotImplemented
+        
+        if not pos:
+            return None
+        else:
+            if self.selfcon_size == 'fc':
+                return nn.Linear(channels[idx] * self.block.expansion, channels[-1] * self.block.expansion)
+            else:
+                if self.selfcon_arch == 'resnet':
+                    # selfcon layer do not share any parameters
+                    layers = []
+                    for i in range(idx+1, 4):
+                        in_planes = channels[i-1] * self.block.expansion
+                        layers.append(resnet_sub_layer(self.block, in_planes, channels[i], num_blocks[i], strides[i]))
+                elif self.selfcon_arch == 'vgg':
+                    raise NotImplemented
+                elif self.selfcon_arch == 'efficientnet':
+                    raise NotImplemented
+
+                return nn.Sequential(*layers)
+        
+    def forward(self, x):
+        sub_out = []
+        
+        x = F.relu(self.bn1(self.conv1(x)))
+        #if self.large or self.dataset == "imaginet":
+        x = self.maxpool(x)
+            
+        x = self.layer1(x)
+        if self.selfcon_layer[0]:
+            if self.selfcon_size != 'fc':
+                out = self.selfcon_layer[0](x)
+                out = torch.flatten(torch.mean(out, dim=(2, 3)), 1)
+            else:
+                out = torch.flatten(torch.mean(x, dim=(2, 3)), 1)
+                out = self.selfcon_layer[0](out)
+            sub_out.append(out)
+            
+        x = self.layer2(x)
+        if self.selfcon_layer[1]:
+            if self.selfcon_size != 'fc':
+                out = self.selfcon_layer[1](x)
+                out = torch.flatten(torch.mean(out, dim=(2, 3)), 1)
+            else:
+                out = torch.flatten(torch.mean(x, dim=(2, 3)), 1)                
+                out = self.selfcon_layer[1](out)
+            sub_out.append(out)
+        
+        x = self.layer3(x)
+        if self.selfcon_layer[2]:
+            if self.selfcon_size != 'fc':
+                out = self.selfcon_layer[2](x)
+                out = torch.flatten(torch.mean(out, dim=(2, 3)), 1)
+            else:
+                out = torch.flatten(torch.mean(x, dim=(2, 3)), 1)
+                out = self.selfcon_layer[2](out)
+            sub_out.append(out)
+            
+        out = self.layer4(x)
+        #out = self.dropout(out)
+        #out = self.avgpool(out)
+        #out = torch.flatten(out, 1)
+        out = torch.mean(out, dim=(2, 3))
+        
+        return sub_out, out
 
 class ResNet(nn.Module):
     def __init__(self, block, num_blocks, in_channel=3, zero_init_residual=False, selfcon_pos=[False,False,False], selfcon_arch='resnet', selfcon_size='same', dataset=''):
@@ -227,6 +362,9 @@ def resnet34(**kwargs):
 def resnet50(**kwargs):
     return ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
 
+def resnet50nodown(**kwargs):
+    return ResNetNoDown(Bottleneck, [3, 4, 6, 3], **kwargs)
+
 
 def resnet101(**kwargs):
     return ResNet(Bottleneck, [3, 4, 23, 3], **kwargs)
@@ -236,6 +374,7 @@ model_dict = {
     'resnet18': [resnet18, 512],
     'resnet34': [resnet34, 512],
     'resnet50': [resnet50, 2048],
+    'resnet50nodown': [resnet50nodown, 2048],
     'resnet101': [resnet101, 2048],
 }
 

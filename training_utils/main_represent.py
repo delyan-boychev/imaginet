@@ -26,8 +26,7 @@ from tqdm import tqdm
 from torch import nn
 from torcheval.metrics import MulticlassAccuracy, MulticlassAUROC
 from torchvision.models import resnet50, ResNet50_Weights
-
-
+from PIL import Image
 def parse_option():
     parser = argparse.ArgumentParser('argument for training')
     
@@ -248,6 +247,17 @@ def set_model(opt):
                     st[name].copy_(st1[name.replace("shortcut", "downsample")])
             del st1, m_t
             model.encoder.load_state_dict(st)
+        elif opt.model == "resnet50nodown" and opt.pretrained_imagenet:
+            print("ImageNet weights loaded")
+            m_t = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
+            #m_t.load_state_dict(model_zoo.load_url("https://download.pytorch.org/models/resnet50-19c8e357.pth"))
+            st = model.encoder.state_dict()
+            st1 = m_t.state_dict()
+            for name, param in st.items():
+                if "selfcon" not in name:
+                    st[name].copy_(st1[name.replace("shortcut", "downsample")])
+            del st1, m_t
+            model.encoder.load_state_dict(st)
     elif opt.model.startswith('vgg'):
         model = ConVGG(**model_kwargs)
     elif opt.model.startswith('wrn'):
@@ -261,8 +271,8 @@ def set_model(opt):
     elif opt.dataset == "imaginet":
         criterion = MultiLabelLossImagiNet()
     if torch.cuda.is_available():
-        if torch.cuda.device_count() > 1:
-            model.encoder = torch.nn.DataParallel(model.encoder)
+        #if torch.cuda.device_count() > 1:
+        #    model.encoder = torch.nn.DataParallel(model.encoder)
         model = model.to(opt.device)
         criterion = criterion.to(opt.device)
         cudnn.benchmark = True

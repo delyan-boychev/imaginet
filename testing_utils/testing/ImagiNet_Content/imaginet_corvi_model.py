@@ -1,20 +1,19 @@
 import os
 import sys
 
-repo_path = os.path.abspath("../../") 
+repo_path = os.path.abspath("../required_libs/DMimageDetection/test_code")
 sys.path.insert(0, repo_path)
 
 import torch
-import torch.nn as nn
 from torchvision import transforms
 from components.datasets import ImagiNet_Testset
 import numpy as np
-from networks.resnet_big import ConResNet
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import random
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score, balanced_accuracy_score
+from get_method_here import get_method_here, def_model
+from sklearn.metrics import roc_auc_score, balanced_accuracy_score, average_precision_score
 from scipy.special import expit
 import csv
 
@@ -35,16 +34,11 @@ dataloader = DataLoader(dataset, batch_size=20, num_workers=8, shuffle=True)
 dataset2 = ImagiNet_Testset("./", f"../../../annotations/test_all.txt", transform=transform)
 dataloader2 = DataLoader(dataset2, batch_size=20, num_workers=8, shuffle=True)
 
+_, model_path, arch, norm_type, patch_size = get_method_here('resnet50nodown_imaginet', weights_path="../required_libs/")
+device = 'cuda'
+model = def_model(arch, model_path, localize=False)
+model = model.to(device).eval()
 
-model = ConResNet(name="resnet50nodown", selfcon_pos=[False, True, False], selfcon_size="fc", dataset="imaginet")
-state = torch.load("../required_libs/imaginet_weights.pt", map_location="cpu")
-model.load_state_dict(state["model"])
-model = model.to("cuda")
-model = model.eval()
-classifier = nn.Sequential(nn.BatchNorm1d(2048), nn.Linear(2048, 1024), nn.ReLU(), nn.Dropout(0.2), nn.Linear(1024, 1))
-classifier.load_state_dict(state["classifier"])
-classifier = classifier.to("cuda")
-classifier.eval()
 
 l = []
 l1 =[]
@@ -52,7 +46,8 @@ k = 0
 
 with torch.no_grad():
     for image, label in tqdm(dataloader):
-        out =  classifier(model.encoder(image.cuda())[1])
+        out =  model(image.cuda())
+        out = torch.mean(out, (2, 3))
         l.append(out)
         l1.append(label.cuda())
 l = torch.concatenate(l, dim=0)
@@ -62,7 +57,8 @@ l2 = []
 l3 = []
 with torch.no_grad():
     for image, label in tqdm(dataloader2):
-        out =  classifier(model.encoder(image.cuda())[1])
+        out =  model(image.cuda())
+        out = torch.mean(out, (2, 3))
         l2.append(out)
         l3.append(label.cuda())
 l2 = torch.concatenate(l2, dim=0).cpu().numpy()
@@ -70,29 +66,24 @@ l3 = torch.concatenate(l3, dim=0).cpu().numpy()
 
 calib = LogisticRegression(max_iter=1000, C=1e10, solver="saga")
 calib.fit(l.cpu().numpy(), l1.cpu().numpy()[:,0])
-f = open("./imaginet_model.csv", "w")
+f = open("./corvi_model.csv", "w")
 csvwriter =  csv.writer(f)
-csvwriter.writerow(["Model", "ACC", "AUC"])
+csvwriter.writerow(["Content Type", "ACC", "AUC"])
 
 l2 = expit(calib.decision_function(l2))
 
 
 
-types = ["ProGAN", "StyleGAN-XL", "StyleGAN3", "SD v2.1", "SDXL v1.0", "Animagine XL", "Midjourney", "DALL·E 3"]
+types = ["Photos", "Paintings", "Faces", "Uncategorised"]
 
 
 average_acc = []
 average_auc = []
-for i in range(8):
-    probs, true =  (l2[l3[:, 3] == i], l3[l3[:, 3] == i, 0])
-    print(balanced_accuracy_score(true, probs >= 0.5))
-    r_p, r_t = (l2[l3[:, 0] == 0], l3[l3[:, 0] == 0, 0])
-    p = np.random.permutation(len(r_p))
-    probs_r, true_r = r_p[p], r_t[p]
-    probs = np.concatenate([probs_r[:probs.shape[0]], probs], axis=0)
-    true = np.concatenate([true_r[:true.shape[0]], true], axis=0)
-    auc = roc_auc_score(true, probs)
-    acc = balanced_accuracy_score(true, probs >= 0.5)
+print(balanced_accuracy_score(l3[:, 0], l2 >= 0.5))
+for i in range(4):
+    probs, true =  (l2[l3[:, 1] == i], l3[l3[:, 1] == i])
+    auc = roc_auc_score(true[:, 0], probs)
+    acc = balanced_accuracy_score(true[:, 0], probs >= 0.5)
     average_auc.append(auc)
     average_acc.append(acc)
     csvwriter.writerow([types[i], f"{acc:.4f}", f"{auc:.4f}"])

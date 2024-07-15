@@ -7,7 +7,7 @@ sys.path.insert(0, repo_path)
 import torch
 import torchvision.models as models
 from torchvision import transforms
-from components.datasets import ImagiNet_Testset
+from components.datasets import PracticalTestset
 import numpy as np
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -23,66 +23,56 @@ torch.manual_seed(42)
 torch.cuda.manual_seed(42)
 np.random.seed(42)
 
+
 mean = (0.485, 0.456, 0.406)
 std = (0.229, 0.224, 0.225)
 norm = transforms.Normalize(mean, std)
 transform =  transforms.Compose([transforms.ToTensor(), norm])
 device = torch.device("cuda")
 
-dataset = ImagiNet_Testset("./",f"../../../annotations/test_calibration.txt", transform=transform)
-dataloader = DataLoader(dataset, batch_size=20, num_workers=8, shuffle=True)
+dataset_calib = PracticalTestset("./", "../additional_annotations/annotations_calib_practical.txt", transform)
+dataloader_calib = DataLoader(dataset_calib, batch_size=20, num_workers=8, shuffle=True)
 
-_, model_path, arch, norm_type, patch_size = get_method_here('Grag2021_latent', weights_path="./required_libs/weights")
-device = 'cuda:0'
+
+_, model_path, arch, norm_type, patch_size = get_method_here('resnet50nodown_imaginet', weights_path="../required_libs/")
+device = 'cuda'
 model = def_model(arch, model_path, localize=False)
 model = model.to(device).eval()
 
-_, model_path, arch, norm_type, patch_size = get_method_here('Grag2021_progan', weights_path="./required_libs/weights")
-device = 'cuda:0'
-model2 = def_model(arch, model_path, localize=False)
-model2 = model2.to(device).eval()
-
-
 l = []
-l1 =[]
-k = 0
-
+l1 = []
 with torch.no_grad():
-    for image, label in tqdm(dataloader):
-        out =  model(image.cuda())
-        out2 =  model2(image.cuda())
-        out = torch.mean((out + out2)/2.0, (1, 2, 3)).unsqueeze(1)
-        l.append(out)
-        l1.append(label.cuda())
+    for image, label in tqdm(dataloader_calib):
+            out =  model(image.cuda())
+            out = torch.mean(out, (2, 3))
+            l.append(out)
+            l1.append(label)
 l = torch.concatenate(l, dim=0)
 l1 = torch.concatenate(l1, dim=0)
 
 calib = LogisticRegression(max_iter=1000, C=1e10, solver="saga")
-calib.fit(l.cpu().numpy(), l1.cpu().numpy()[:,0])
-f = open("./corvi_model.csv", "w")
+calib.fit(l.cpu().numpy(), l1.cpu().numpy()[:, 0])
+f = open("./imaginet_corvi_model.csv", "w")
 csvwriter =  csv.writer(f)
 csvwriter.writerow(["Model", "ACC", "AUC"])
 
 
-files = ["test_gan.txt", "test_sd.txt", "test_midjourney.txt", "test_dalle3.txt"]
-models = ["GAN", "SD", "Midjourney", "DALLE3"]
-
+files = ["Test_DreamBooth_num1052.txt", "Test_MidjourneyV4_num1354.txt", "Test_MidjourneyV5_num2000.txt", "Test_NightCafe_num1300.txt", "Test_StableAI_num1290.txt", "Test_YiJian_num796.txt"]
+models = ["DreamBooth", "MidjoruneyV4", "MidjourneyV5", "NightCafe", "StableAI", "YiJian"]
 
 average_acc = []
 average_auc = []
-for i, a in enumerate(files):
-    print(a)
+for i, a in  enumerate(files):
     l = []
     l1 = []
-    dataset = ImagiNet_Testset("./", f"../../../annotations/{a}", transform=transform)
+    dataset = PracticalTestset("./", f"../additional_annotations/{a}", transform)
     dataloader = DataLoader(dataset, batch_size=20, num_workers=8, shuffle=True)
     with torch.no_grad():
         for image, label in tqdm(dataloader):
             out =  model(image.cuda())
-            out2 =  model2(image.cuda())
-            out = torch.mean((out + out2)/2.0, (1, 2, 3)).unsqueeze(1)
+            out = torch.mean(out, (2, 3))
             l.append(out)
-            l1.append(label.cuda())
+            l1.append(label)
     l = torch.concatenate(l, dim=0).cpu().numpy()
     l1 = torch.concatenate(l1, dim=0).cpu().numpy()
     l = expit(calib.decision_function(l))
@@ -91,4 +81,5 @@ for i, a in enumerate(files):
     average_acc.append(acc)
     average_auc.append(auc)
     csvwriter.writerow([models[i], f"{acc:.4f}", f"{auc:.4f}"])
+    f.flush()
 csvwriter.writerow(["Mean", f"{sum(average_acc)/len(average_acc):.4f}", f"{sum(average_auc)/len(average_auc):.4f}"])

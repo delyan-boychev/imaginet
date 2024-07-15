@@ -34,20 +34,12 @@ dataset = ImagiNet_Testset("./", "../../../annotations/test_calibration.txt", tr
 dataloader = DataLoader(dataset, batch_size=20, num_workers=8, shuffle=True)
 
 
-model = ConResNet(selfcon_pos=[False, True, False], selfcon_size="fc", dataset="imaginet")
+model = ConResNet(name="resnet50nodown", selfcon_pos=[False, True, False], selfcon_size="fc", dataset="imaginet")
 state = torch.load("../required_libs/imaginet_weights.pt", map_location="cpu")
 model.load_state_dict(state["model"])
 model = model.to("cuda")
 model = model.eval()
-class L2Norm(nn.Module):
-    def forward(self, x):
-        return torch.nn.functional.normalize(x, dim=1, p=2)
-classifier = nn.Sequential(
-                L2Norm(),
-                nn.Linear(2048, 1024),
-                nn.ReLU(inplace=True),
-                nn.Linear(1024, 1)
-            )
+classifier = nn.Sequential(nn.BatchNorm1d(2048), nn.Linear(2048, 1024), nn.ReLU(), nn.Dropout(0.2), nn.Linear(1024, 1))
 classifier.load_state_dict(state["classifier"])
 classifier = classifier.to("cuda")
 classifier.eval()
@@ -66,12 +58,12 @@ l1 = torch.concatenate(l1, dim=0)
 
 calib = LogisticRegression(max_iter=1000, C=1e10, solver="saga")
 calib.fit(l.cpu().numpy(), l1.cpu().numpy()[:,0])
-f = open("./imaginet_model2.csv", "w")
+f = open("./imaginet_model.csv", "w")
 csvwriter =  csv.writer(f)
 csvwriter.writerow(["Model", "ACC", "AUC"])
 
 
-files = ["test_gan_2.txt", "test_sd_2.txt", "test_midjourney_2.txt", "test_dalle3_2.txt"]
+files = ["test_gan.txt", "test_sd.txt", "test_midjourney.txt", "test_dalle3.txt"]
 models = ["GAN", "SD", "Midjourney", "DALLE3"]
 
 
@@ -83,7 +75,7 @@ for i, a in enumerate(files):
     print(a)
     l = []
     l1 = []
-    dataset = ImagiNet_Testset("./", f"../../annotations/{a}", transform=transform)
+    dataset = ImagiNet_Testset("./", f"../../../annotations/{a}", transform=transform)
     dataloader = DataLoader(dataset, batch_size=20, num_workers=8, shuffle=True)
     
     with torch.no_grad():

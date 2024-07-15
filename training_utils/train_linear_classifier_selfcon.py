@@ -19,18 +19,14 @@ torch.cuda.manual_seed(100)
 model = ConResNet(selfcon_pos=[False, True, False], selfcon_arch="resnet", selfcon_size="fc", dataset="imaginet")
 state = torch.load("./checkpoint_of_the_selfcon_model.pth", map_location="cpu")
 model.load_state_dict(state["model"])
-class L2Norm(nn.Module):
-    def forward(self, x):
-        return torch.nn.functional.normalize(x, dim=1, p=2)
-classifier = nn.Sequential(
-                L2Norm(),
-                nn.Linear(2048, 1024),
-                nn.ReLU(inplace=True),
-                nn.Linear(1024, 1)
-            )
+model.eval()
+for module in model.modules():
+    if isinstance(module, torch.nn.BatchNorm2d):
+        module.train()
+classifier = nn.Sequential(nn.BatchNorm1d(2048), nn.Linear(2048, 1024), nn.ReLU(), nn.Dropout(0.2), nn.Linear(1024, 1))
 classifier = classifier.to("cuda")
 model = model.to("cuda")
-model = model.to("cuda")
+
 mean = (0.485, 0.456, 0.406)
 std = (0.229, 0.224, 0.225)
 normalize = transforms.Normalize(mean=mean, std=std)
@@ -47,8 +43,8 @@ test_loader = torch.utils.data.DataLoader(
         test_dataset, batch_size=200,
         num_workers=16, pin_memory=True)
 criterion = torch.nn.BCEWithLogitsLoss()
-optimizer = torch.optim.Adam(classifier.parameters(), lr=1e-4, weight_decay=1e-4)
-def train_epoch(loader, model, optimizer, criterion, epoch):
+optimizer = torch.optim.Adam(classifier.parameters(), lr=1e-4, weight_decay=1e-3)
+def train_epoch(loader, model, cls, optimizer, criterion, epoch):
     acc = BinaryAccuracy()
     auc = BinaryAUROC()
     acc = acc.to("cuda", non_blocking=True)
@@ -63,7 +59,7 @@ def train_epoch(loader, model, optimizer, criterion, epoch):
         labels_base = labels_base.type(torch.FloatTensor).to("cuda", non_blocking=True)[:, 0]
         with torch.no_grad():
             _ , t = model.encoder(images)
-        out = classifier(t.detach())
+        out = cls(t.detach())
         sig_out = torch.sigmoid(out).squeeze(1)
         loss = criterion(out.squeeze(1), labels_base)
         acc.update((sig_out >= 0.5).int(), labels_base)
@@ -119,7 +115,7 @@ if not os.path.exists(dir_save):
     os.mkdir(dir_save)
 summwrt = SummaryWriter(dir_tb, flush_secs=30)
 for i in range(1, 5+1):
-    loss, acc, auc = train_epoch(train_loader, model, optimizer, criterion, i)
+    loss, acc, auc = train_epoch(train_loader, model, classifier, optimizer, criterion, i)
     summwrt.add_scalar("Train Loss", loss, i)
     summwrt.add_scalar("Train Acc", acc, i)
     summwrt.add_scalar("Train AUC", auc, i)

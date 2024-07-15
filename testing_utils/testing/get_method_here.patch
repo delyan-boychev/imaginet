@@ -1,0 +1,17 @@
+diff --git a/test_code/get_method_here.py b/test_code/get_method_here.py
+index 5147f1c..84b748c 100644
+--- a/test_code/get_method_here.py
++++ b/test_code/get_method_here.py
+@@ -36,6 +36,12 @@ def get_method_here(model_name, weights_path):
+         arch = 'res50stride1'
+         norm_type = 'resnet'
+         patch_size = None
++    elif model_name == 'resnet50nodown_imaginet':
++        model_name = 'resnet50nodown_imaginet'
++        model_path = os.path.join(weights_path, './model_epoch_best.pth')
++        arch = 'res50stride1'
++        norm_type = 'resnet'
++        patch_size = None
+     else:
+         print(model_name)
+         from get_method import get_method
