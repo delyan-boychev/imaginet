@@ -8,12 +8,12 @@ For now we have provided only an automatic download script for **FFHQ** datasets
 | :information_source: You should place all extracted datasets in one folder. |
 |-----------------------------------------------------------------------------|
 
-The extracted content should be put in the following folders (<sup>*</sup> signifies datasets that do not require additional folders to be created):
+The extracted content should be put in the following folders (* signifies datasets that do not require additional folders to be created):
  - **ImageNet:** imagenet (ILSVRC folder placed here)
- - **COCO<sup>*</sup>:** train2017, val2017
- - **LSUN/ProGAN<sup>*</sup>:** progan_train, progan_val
- - **WikiArt<sup>*</sup>:** wikiart
- - **LSUN/ProGAN<sup>*</sup>:** progan_train, progan_val
+ - **COCO\*:** train2017, val2017
+ - **LSUN/ProGAN\*:** progan_train, progan_val
+ - **WikiArt\*:** wikiart
+ - **LSUN/ProGAN\*:** progan_train, progan_val
  - **Photozilla:** photozilla (dataset and other_dataset placed here)
  - **Danbooru:** danbooru2021
  - **JourneyDB:** journeydb (extracted 000.zip folder renamed to journeydb)
