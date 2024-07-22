@@ -1,7 +1,14 @@
-# ImagiNet: A Multi-Content Dataset for Generalizable Synthetic Image Detection via Contrastive Learning
-![](media/dataset_preview.png)
+<p align="center">
+    <img src="media/logo.png" alt="" width="40%" align="top"">
+</p>
+
+<p align="center">
+  <em><strong>ImagiNet</strong>: A Multi-Content Dataset for Generalizable Synthetic Image Detection via Contrastive Learning <br></em>
+</p>
 **Abstract:**
 <p align="justify">Generative models, such as diffusion models (DMs), variational autoencoders (VAEs), and generative adversarial networks (GANs), produce images with a level of authenticity that makes them nearly indistinguishable from real photos and artwork. While this capability is beneficial for many industries, the difficulty of identifying synthetic images leaves online media platforms vulnerable to impersonation and misinformation attempts. To support the development of defensive methods, we introduce ImagiNet, a high-resolution and balanced dataset for synthetic image detection, designed to mitigate potential biases in existing resources. It contains 200K examples, spanning four content categories: photos, paintings, faces, and uncategorized. Synthetic images are produced with open-source and proprietary generators, whereas real counterparts of the same content type are collected from public datasets. The structure of ImagiNet allows for a two-track evaluation system: i) classification as real or synthetic and ii) identification of the generative model. To establish a baseline, we train a ResNet-50 model using a self-supervised contrastive objective (SelfCon) for each track. The model demonstrates state-of-the-art performance and high inference speed across established benchmarks, achieving an AUC of up to 0.99 and balanced accuracy ranging from 86% to 95%, even under social network conditions that involve compression and resizing.</p>
+
+![](media/dataset_preview.png)
 
 ## Instructions for downloading
 For now we have provided only an automatic download script for **FFHQ** datasets since we used custom filenames. Before downloading, you should write the path to your credentials for Google Drive API in `download_scripts/ffhq.py` script and install the packages from `requirements.txt`. Other datasets should be downloaded the datasets from their original sources and placed in one directory. This is the root directory of the dataset. After that, you can invoke `dataset_operations/delete_not_needed.py` with an argument to the path of the root directory where all datasets are extracted. The script will remove the images that are not included in our dataset.
