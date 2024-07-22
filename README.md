@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="media/logo.webp" alt="" width="30%" align="top"">
+    <img src="media/logo.webp" alt="" width="45%" align="top"">
 </p>
 
 <p align="center">
