@@ -5,7 +5,7 @@ import argparse
 import time
 import random
 import numpy as np
-from grad_cache import GradCache
+from grad_cache_con_learning import GradCache
 
 import torch
 import torch.backends.cudnn as cudnn
