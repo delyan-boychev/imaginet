@@ -365,7 +365,7 @@ def _train(images, labels, model, criterion, epoch, bsz, opt):
 def train(train_loader, model, criterion, optimizer, epoch, opt):
     """one epoch training"""
     model.train()
-    gradcache = GradCache(model, chunk_size=opt.grad_cache_chunk_size, loss_fn=criterion)
+    gradcache = GradCache(model, chunk_size=opt.grad_cache_chunk_size, loss_fn=criterion, loss_type="SelfCon")
 
     batch_time = AverageMeter()
     data_time = AverageMeter()
