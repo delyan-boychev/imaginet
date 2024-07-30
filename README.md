@@ -75,8 +75,16 @@ We also provide our training scripts in `training_utils`. You can train the mode
 
 ## Cite
 
-```
-BIBTEX TBA
+```bibtex
+@misc{boychev2024imaginetmulticontentdatasetgeneralizable,
+      title={ImagiNet: A Multi-Content Dataset for Generalizable Synthetic Image Detection via Contrastive Learning}, 
+      author={Delyan Boychev and Radostin Cholakov},
+      year={2024},
+      eprint={2407.20020},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2407.20020}, 
+}
 ```
 
 ## Licensing
