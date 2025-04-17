@@ -16,7 +16,7 @@ random.seed(100)
 torch.manual_seed(100)
 torch.cuda.manual_seed(100)
 
-model = ConResNet(selfcon_pos=[False, True, False], selfcon_arch="resnet", selfcon_size="fc", dataset="imaginet")
+model = ConResNet(name="resnet50nodown", selfcon_pos=[False, True, False], selfcon_arch="resnet", selfcon_size="fc", dataset="imaginet")
 state = torch.load("./checkpoint_of_the_selfcon_model.pth", map_location="cpu")
 model.load_state_dict(state["model"])
 model.eval()
@@ -25,7 +25,6 @@ for module in model.modules():
         module.train()
 classifier = nn.Sequential(nn.BatchNorm1d(2048), nn.Linear(2048, 1024), nn.ReLU(), nn.Dropout(0.2), nn.Linear(1024, 1))
 classifier = classifier.to("cuda")
-model = model.to("cuda")
 
 mean = (0.485, 0.456, 0.406)
 std = (0.229, 0.224, 0.225)
@@ -34,7 +33,7 @@ train_transform = transforms.Compose([
         transforms.ToTensor(),
         normalize,
     ])
-train_dataset = ImagiNet("./", annotations_file="../annotations/calibration.txt", anchor=True, resize=False, transform=train_transform)
+train_dataset = ImagiNet("./", annotations_file="../annotations/calibration.txt", train=False, anchor=True, resize=True, transform=train_transform)
 train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=200, shuffle=True,
         num_workers=16, pin_memory=True)
