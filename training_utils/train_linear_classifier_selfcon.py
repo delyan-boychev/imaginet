@@ -20,6 +20,8 @@ model = ConResNet(name="resnet50nodown", selfcon_pos=[False, True, False], selfc
 state = torch.load("./checkpoint_of_the_selfcon_model.pth", map_location="cpu")
 model.load_state_dict(state["model"])
 model.eval()
+model.to("cuda")
+
 for module in model.modules():
     if isinstance(module, torch.nn.BatchNorm2d):
         module.train()
