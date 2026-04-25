@@ -56,7 +56,7 @@ Synthetic Image Detection results:
 | DALL·E 3   | 0.4128 / 0.3905 | 0.5180 / 0.5270 | 0.5368 / 0.5482 | 0.8906 / 0.9759 | 0.9724 / 0.9963 |
 | Mean       | 0.5279 / 0.5637 | 0.5985 / 0.6562 | 0.5892 / 0.6115 | 0.8753 / 0.9604 | 0.9589 / 0.9930 |
 
-Model Identification results:
+Models speed in `ms` on RTX 4090 TI:
 
 | Grag2021 | Wu2023 | Corvi2022 | Ours*  |
 |----------|--------|-----------|--------|
